@@ -752,7 +752,16 @@ status_t SurfaceFlinger::getDisplayConfigs(const sp<IBinder>& display,
         }
     public:
         static int getEmuDensity() {
-            return getDensityFromProperty("qemu.sf.lcd_density"); }
+            int density = 0;
+            char property[PROPERTY_VALUE_MAX];
+            property_get("persist.sys.density", property, "none");
+            if(strcmp(property, "none") != 0){
+                density = atoi(property);
+            }else{
+                density = getDensityFromProperty("qemu.sf.lcd_density");
+            }
+            return density;
+        }
         static int getBuildDensity()  {
             return getDensityFromProperty("ro.sf.lcd_density"); }
     };
